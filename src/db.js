@@ -4,13 +4,13 @@ import config from './config.js';
 const { host, port, user, password, database, connectionLimit } = config.db;
 
 const pool = mysql.createPool({
-  host,
-  port,
-  user,
-  password,
-  database,
+  host:'10.11.108.217',
+  port:'3306',
+  user:'fanxin',
+  password:'Qwe123456',
+  database:'shache',
   waitForConnections: true,
-  connectionLimit,
+  connectionLimit:10,
   charset: 'utf8mb4',
 });
 
