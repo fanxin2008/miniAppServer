@@ -1,7 +1,7 @@
 {
   "name": "shache-server",
   "version": "1.0.0",
-  "description": "WeChat Mini Program game server: login + daily play quota (Tencent Cloud MySQL)",
+  "description": "WeChat Mini Program server: minimal login endpoint returning welcome",
   "type": "module",
   "main": "src/server.js",
   "scripts": {
@@ -13,8 +13,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.11.5"
+    "express": "^4.21.2"
   }
 }
