@@ -5,10 +5,17 @@ import { initDatabase } from './db.js';
 try {
   await initDatabase();
 } catch (err) {
-  console.error('[db] 数据库初始化失败，请检查 DB_* 配置。', err.message);
+  console.error('[db] 数据库初始化失败，请检查 DB_* 配置。', {
+    time: new Date().toISOString(),
+    message: err.message,
+    code: err.code,
+    errno: err.errno,
+    sqlState: err.sqlState,
+    sqlMessage: err.sqlMessage,
+  });
   process.exit(1);
 }
 
 app.listen(config.port, () => {
-  console.log(`[shache-server] listening on http://127.0.0.1:${config.port}`);
+  console.log(`[shache-server] listening on http://127.0.0.1:${config.port}`, new Date().toISOString());
 });

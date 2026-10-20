@@ -15,7 +15,7 @@
 - 腾讯云 MySQL（通过 `mysql2` 连接池访问）
 - JWT（jsonwebtoken）
 
-> 数据库使用腾讯云 MySQL，连接参数通过 `DB_HOST` / `DB_PORT` / `DB_USER` / `DB_PASSWORD` / `DB_NAME` 配置；启动时会自动创建数据库和表。
+> 数据库使用腾讯云 MySQL，连接参数通过 `DB_HOST` / `DB_PORT` / `DB_USER` / `DB_PASSWORD` / `DB_NAME` 配置；启动时会自动建表，若账号无 `CREATE DATABASE` 权限则跳过自动建库，需提前在腾讯云控制台创建对应库。
 
 ## 目录结构
 

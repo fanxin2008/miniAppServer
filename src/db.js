@@ -4,13 +4,14 @@ import config from './config.js';
 const { host, port, user, password, database, connectionLimit } = config.db;
 
 const pool = mysql.createPool({
-  host:'10.11.108.217',
-  port:'3306',
-  user:'root',
-  password:'Qwe123456',
-  database:'shache',
+  host,
+  port,
+  user,
+  password,
+  database,
   waitForConnections: true,
-  connectionLimit:10,
+  connectionLimit,
+  connectTimeout: 5000,
   charset: 'utf8mb4',
 });
 
@@ -19,11 +20,25 @@ function escapeIdentifier(name) {
 }
 
 export async function initDatabase() {
-  const admin = await mysql.createConnection({ host, port, user, password, charset: 'utf8mb4' });
+  const admin = await mysql.createConnection({
+    host,
+    port,
+    user,
+    password,
+    connectTimeout: 5000,
+    charset: 'utf8mb4',
+  });
+
   try {
     await admin.query(
       `CREATE DATABASE IF NOT EXISTS ${escapeIdentifier(database)} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
     );
+  } catch (err) {
+    if (err.code === 'ER_DBACCESS_DENIED_ERROR' || err.code === 'ER_ACCESS_DENIED_ERROR') {
+      console.warn('[db] 无 CREATE DATABASE 权限，跳过自动建库（请确认数据库已存在）');
+    } else {
+      throw err;
+    }
   } finally {
     await admin.end();
   }
@@ -49,7 +64,7 @@ export async function initDatabase() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
 
-  console.log('[db] MySQL 初始化完成');
+  console.log('[db] MySQL 初始化完成', new Date().toISOString());
 }
 
 export async function pingDatabase(timeoutMs = 3000) {
