@@ -2,13 +2,14 @@ import 'dotenv/config';
 
 const config = {
   port: Number(process.env.PORT || 8080),
+  host: process.env.HOST || '0.0.0.0',
   wechat: {
     appid: process.env.WECHAT_APPID || '',
     secret: process.env.WECHAT_SECRET || '',
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'please_change_me_to_a_long_random_string',
-    expiresIn: '7d',
+    expiresInSeconds: Number(process.env.JWT_EXPIRES_IN_SECONDS || 7200),
   },
   db: {
     host: process.env.DB_HOST || '127.0.0.1',
@@ -18,7 +19,8 @@ const config = {
     database: process.env.DB_NAME || 'shache',
     connectionLimit: Number(process.env.DB_CONNECTION_LIMIT || 10),
   },
-  dailyPlayLimit: Number(process.env.DAILY_PLAY_LIMIT || 10),
+  dailyLimit: Number(process.env.DAILY_CHALLENGE_LIMIT || process.env.DAILY_PLAY_LIMIT || 10),
+  sessionTtlSeconds: Number(process.env.CHALLENGE_SESSION_TTL_SECONDS || 180),
   timezone: process.env.TIMEZONE || 'Asia/Shanghai',
 };
 

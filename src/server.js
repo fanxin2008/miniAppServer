@@ -16,6 +16,6 @@ try {
   process.exit(1);
 }
 
-app.listen(config.port, () => {
-  console.log(`[shache-server] listening on http://127.0.0.1:${config.port}`, new Date().toISOString());
+app.listen(config.port, config.host, () => {
+  console.log(`[shache-server] listening on http://${config.host}:${config.port}`, new Date().toISOString());
 });

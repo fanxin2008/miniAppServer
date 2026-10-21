@@ -1,19 +1,41 @@
 import jwt from 'jsonwebtoken';
 import config from '../config.js';
+import { findUserById } from '../services/users.js';
+import { forbidden, unauthorized } from '../lib/httpError.js';
 
-export function requireAuth(req, res, next) {
-  const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
-
-  if (!token) {
-    return res.status(401).json({ code: 401, message: '缺少登录凭证' });
-  }
-
+export async function requireAuth(req, res, next) {
   try {
-    const payload = jwt.verify(token, config.jwt.secret);
-    req.openid = payload.openid;
+    const header = req.headers.authorization || '';
+    const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+
+    if (!token) {
+      throw unauthorized();
+    }
+
+    let payload;
+    try {
+      payload = jwt.verify(token, config.jwt.secret);
+    } catch {
+      throw unauthorized();
+    }
+
+    const userId = payload.sub || payload.userId;
+    if (!userId) {
+      throw unauthorized();
+    }
+
+    const user = await findUserById(userId);
+    if (!user) {
+      throw unauthorized();
+    }
+    if (Number(user.status) === 3) {
+      throw forbidden('ACCOUNT_BANNED', '账号已被封禁');
+    }
+
+    req.user = user;
+    req.userId = String(user.id);
     next();
-  } catch {
-    return res.status(401).json({ code: 401, message: '登录已过期，请重新登录' });
+  } catch (err) {
+    next(err);
   }
 }

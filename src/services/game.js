@@ -44,7 +44,7 @@ export async function recordVisit(openid) {
   return getStatus(openid);
 }
 
-export async function recordPlay(openid) {
+export async function recordPlay(openid, score = null) {
   const date = todayInTimezone();
   await ensureRecord(openid, date);
 
@@ -58,6 +58,13 @@ export async function recordPlay(openid) {
     err.status = 429;
     err.code = 'NO_REMAINING';
     throw err;
+  }
+
+  if (Number.isFinite(score) && score !== null) {
+    await db.execute(
+      'UPDATE users SET best_score = GREATEST(best_score, ?) WHERE openid = ?',
+      [score, openid]
+    );
   }
 
   return getStatus(openid);
