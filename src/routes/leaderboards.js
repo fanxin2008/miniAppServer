@@ -6,6 +6,8 @@ import { badRequest } from '../lib/httpError.js';
 
 const router = Router();
 
+router.use(requireAuth);
+
 function parseScope(value) {
   const scope = normalizeScope(value);
   if (!scope) {
