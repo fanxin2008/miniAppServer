@@ -19,6 +19,11 @@ const config = {
     database: process.env.DB_NAME || 'shache',
     connectionLimit: Number(process.env.DB_CONNECTION_LIMIT || 10),
   },
+  ip2region: {
+    ipv4Db: process.env.IP2REGION_IPV4_DB || '',
+    ipv6Db: process.env.IP2REGION_IPV6_DB || '',
+    disableIpv6: process.env.IP2REGION_DISABLE_IPV6 === 'true',
+  },
   dailyLimit: Number(process.env.DAILY_CHALLENGE_LIMIT || process.env.DAILY_PLAY_LIMIT || 10),
   sessionTtlSeconds: Number(process.env.CHALLENGE_SESSION_TTL_SECONDS || 180),
   timezone: process.env.TIMEZONE || 'Asia/Shanghai',

@@ -7,6 +7,7 @@
 - Node.js 18+ / Express 4
 - MySQL（`mysql2/promise`，InnoDB / utf8mb4）
 - JWT（jsonwebtoken）
+- IP 属地离线库（ip2region，内置 IPv4/IPv6 数据，可自备库文件）
 
 ## 目录结构
 
@@ -58,6 +59,7 @@ npm run dev
 - 开始挑战时扣 1 次；同一 `requestId` 重试不重复扣次。
 - 成绩提交后进入候选，用户显式发布后写入 `user_best_records`，全国/省/市榜均以该表为唯一来源。
 - 排行榜排序：`best_time_ms ASC, achieved_at ASC, user_id ASC`，名次为连续唯一序号。
+- IP 属地：服务端从 `x-forwarded-for` / `req.ip` 取真实 IP，经 ip2region 离线解析省/市；省榜用 GB 省级代码，市榜按城市名分组。可选手动指定 `IP2REGION_IPV4_DB` / `IP2REGION_IPV6_DB` 替换内置库。
 - JSON 中的 64 位整数 ID 一律使用字符串，避免 JS 精度丢失。
 
 ## 部署

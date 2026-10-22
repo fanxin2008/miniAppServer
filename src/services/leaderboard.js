@@ -7,12 +7,19 @@ export function normalizeScope(scope) {
   return SCOPES.includes(value) ? value : null;
 }
 
+function hasValue(value) {
+  return value !== null && value !== undefined && value !== '';
+}
+
 function regionFilter(scope, region) {
   if (scope === 'province') {
     return { clause: 'AND b.province_code = ?', params: [region.provinceCode] };
   }
   if (scope === 'city') {
-    return { clause: 'AND b.city_code = ?', params: [region.cityCode] };
+    if (hasValue(region.cityCode)) {
+      return { clause: 'AND b.city_code = ?', params: [region.cityCode] };
+    }
+    return { clause: 'AND b.city_name = ?', params: [region.cityName] };
   }
   return { clause: '', params: [] };
 }
@@ -82,11 +89,15 @@ async function rankOfBest(best, scope) {
     params.push(best.province_code);
   }
   if (scope === 'city') {
-    if (best.city_code === null || best.city_code === undefined) {
+    if (hasValue(best.city_code)) {
+      regionClause = 'AND b.city_code = ?';
+      params.push(best.city_code);
+    } else if (hasValue(best.city_name)) {
+      regionClause = 'AND b.city_name = ?';
+      params.push(best.city_name);
+    } else {
       return null;
     }
-    regionClause = 'AND b.city_code = ?';
-    params.push(best.city_code);
   }
 
   const [rows] = await db.execute(

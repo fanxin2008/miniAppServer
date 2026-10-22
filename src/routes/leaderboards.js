@@ -44,7 +44,7 @@ function regionForBrowse(scope, query, req) {
   if (scope === 'province' && ipRegion && ipRegion.provinceCode) {
     return ipRegion;
   }
-  if (scope === 'city' && ipRegion && ipRegion.cityCode) {
+  if (scope === 'city' && ipRegion && (ipRegion.cityCode || ipRegion.cityName)) {
     return ipRegion;
   }
   throw badRequest('REGION_REQUIRED', '浏览省/市榜单需要提供 regionCode/regionName 或可信 IP 属地');
